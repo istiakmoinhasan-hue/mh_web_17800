@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MH Advanced Dashboard</title>
+<style>
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+
+/* Colors */
+:root {
+  --primary:#000;
+  --secondary:#fff;
+  --accent:#333;
+  --bg:#f4f4f4;
+}
+
+/* Body & Layout */
+body { display:flex; min-height:100vh; background:var(--bg); }
+
+/* Sidebar */
+.sidebar {
+  width:250px;
+  background:var(--primary);
+  color:var(--secondary);
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+}
+.sidebar h2 { text-align:center; margin-bottom:30px; }
+.sidebar a {
+  color:var(--secondary);
+  text-decoration:none;
+  padding:10px 15px;
+  display:block;
+  border-radius:5px;
+  margin-bottom:5px;
+  transition:0.3s;
+  cursor:pointer;
+}
+.sidebar a:hover, .sidebar a.active { background:var(--accent); }
+
+/* Main Content */
+.main-content { flex:1; padding:20px; display:flex; flex-direction:column; }
+
+/* Navbar */
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--secondary);
+  padding:10px 20px;
+  border-radius:10px;
+  margin-bottom:20px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+.navbar .logo-title { display:flex; align-items:center; gap:10px; }
+.navbar .logo-title img { height:40px; }
+.navbar nav a { margin-left:20px; text-decoration:none; color:var(--primary); font-weight:bold; }
+.navbar nav a:hover { text-decoration:underline; }
+
+/* Product Section */
+.category-title { font-size:24px; margin-bottom:15px; }
+.products { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+.product-card {
+  background:var(--secondary);
+  border-radius:10px;
+  padding:15px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.product-card img { width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+.product-card h4 { margin-bottom:5px; }
+.product-card p { font-size:14px; margin-bottom:10px; color:#333; }
+.product-card button {
+  padding:10px; background:var(--primary); color:var(--secondary); border:none; border-radius:5px; cursor:pointer;
+}
+.product-card button:hover { background:var(--accent); }
+
+/* Modal */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+.modal-content { background:var(--secondary); padding:20px; border-radius:10px; max-width:500px; width:90%; position:relative; }
+.modal-content img { width:100%; height:250px; object-fit:cover; margin-bottom:15px; border-radius:8px; }
+.modal-content h3 { margin-bottom:10px; }
+.modal-content p { margin-bottom:15px; }
+.close-btn { position:absolute; top:10px; right:15px; font-size:20px; font-weight:bold; cursor:pointer; color:#000; }
+
+/* Chat */
+.chat-container {
+  max-height:250px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:10px;
+  background:#e0e0e0;
+  border-radius:10px;
+  overflow-y:auto;
+  margin-top:20px;
+}
+.chat-bubble { max-width:70%; margin:5px 0; padding:10px; border-radius:10px; }
+.user { background:var(--primary); color:var(--secondary); align-self:flex-end; }
+.bot { background:#fff; color:#000; align-self:flex-start; }
+
+/* Chat Input */
+.input-container { display:flex; gap:10px; margin-top:10px; }
+#userInput { flex:1; padding:10px; border-radius:5px; border:1px solid var(--primary); }
+#sendBtn { padding:10px 20px; background:var(--primary); color:var(--secondary); border:none; border-radius:5px; cursor:pointer; }
+#sendBtn:hover { background:var(--accent); }
+
+/* Subscribe */
+.subscribe { background:var(--secondary); padding:15px; border-radius:10px; box-shadow:0 3px 10px rgba(0,0,0,0.1); margin-top:20px; }
+.subscribe input { padding:10px; width:70%; border:1px solid var(--primary); border-radius:5px; margin-right:10px; }
+.subscribe button { padding:10px 15px; border:none; background:var(--primary); color:var(--secondary); border-radius:5px; cursor:pointer; }
+.subscribe button:hover { background:var(--accent); }
+
+/* Footer */
+footer { text-align:center; padding:20px; background:var(--primary); color:var(--secondary); border-radius:10px; margin-top:20px; }
+
+/* Responsive */
+@media(max-width:900px){
+  body { flex-direction:column; }
+  .sidebar { width:100%; flex-direction:row; overflow-x:auto; }
+  .sidebar h2 { display:none; }
+  .sidebar a { margin-right:10px; }
+  .products { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h2>MH</h2>
+  <a class="active" onclick="showCategory('Phones')">Phones</a>
+  <a onclick="showCategory('Laptops')">Laptops</a>
+  <a onclick="showCategory('PC Parts')">PC Parts</a>
+  <a onclick="showCategory('Accessories')">Accessories</a>
+</div>
+
+<!-- Main content -->
+<div class="main-content">
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo-title">
+      <img src="1000002550.png" alt="Logo">
+      <h1>MH</h1>
+    </div>
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Subscribe</a>
+    </nav>
+  </div>
+
+  <!-- Category Title -->
+  <div class="category-title" id="categoryTitle">Phones</div>
+
+  <!-- Products Grid -->
+  <div class="products" id="productsContainer"></div>
+
+  <!-- Chatbox -->
+  <div class="chat-container" id="chatContainer"></div>
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="Type a message...">
+    <button id="sendBtn">Send</button>
+  </div>
+
+  <!-- Subscribe -->
+  <div class="subscribe">
+    <input type="email" id="subscribeEmail" placeholder="Enter your email">
+    <button onclick="subscribe()">Subscribe</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>&copy; 2025 MH | All rights reserved</footer>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <img id="modalImg" src="" alt="Product">
+    <h3 id="modalName"></h3>
+    <p id="modalPrice"></p>
+    <p id="modalDesc"></p>
+  </div>
+</div>
+
+<script>
+// Product Data
+const productsData = {
+  "Phones": [
+    {name:"iPhone 15", price:"$1200", desc:"Latest Apple phone", img:"https://via.placeholder.com/250x150?text=iPhone+15"},
+    {name:"Samsung Galaxy S23", price:"$999", desc:"High-end Samsung phone", img:"https://via.placeholder.com/250x150?text=Galaxy+S23"}
+  ],
+  "Laptops": [
+    {name:"MacBook Pro", price:"$2200", desc:"Apple M2 laptop", img:"https://via.placeholder.com/250x150?text=MacBook+Pro"},
+    {name:"Dell XPS 13", price:"$1500", desc:"Compact high performance", img:"https://via.placeholder.com/250x150?text=Dell+XPS+13"}
+  ],
+  "PC Parts": [
+    {name:"NVIDIA RTX 4090", price:"$2000", desc:"Top GPU", img:"https://via.placeholder.com/250x150?text=RTX+4090"},
+    {name:"Corsair RAM 32GB", price:"$150", desc:"High-speed memory", img:"https://via.placeholder.com/250x150?text=RAM+32GB"}
+  ],
+  "Accessories": [
+    {name:"Logitech Mouse", price:"$50", desc:"Wireless mouse", img:"https://via.placeholder.com/250x150?text=Mouse"},
+    {name:"Anker Charger", price:"$30", desc:"Fast charger", img:"https://via.placeholder.com/250x150?text=Charger"}
+  ]
+};
+
+// Show category
+const productsContainer = document.getElementById('productsContainer');
+const categoryTitle = document.getElementById('categoryTitle');
+
+function showCategory(cat){
+  categoryTitle.textContent = cat;
+  productsContainer.innerHTML = '';
+  productsData[cat].forEach(prod=>{
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <img src="${prod.img}" alt="${prod.name}">
+      <h4>${prod.name}</h4>
+      <p>${prod.desc}</p>
+      <p><b>${prod.price}</b></p>
+      <button onclick="openModal('${prod.img}','${prod.name}','${prod.price}','${prod.desc}')">View Details</button>
+    `;
+    productsContainer.appendChild(card);
+  });
+}
+
+// Modal
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const modalName = document.getElementById('modalName');
+const modalPrice = document.getElementById('modalPrice');
+const modalDesc = document.getElementById('modalDesc');
+const closeModalBtn = document.getElementById('closeModal');
+
+function openModal(img,name,price,desc){
+  modal.style.display = 'flex';
+  modalImg.src = img;
+  modalName.textContent = name;
+  modalPrice.textContent = price;
+  modalDesc.textContent = desc;
+}
+
+closeModalBtn.onclick = ()=> modal.style.display='none';
+window.onclick = (e)=>{ if(e.target == modal) modal.style.display='none'; };
+
+// Chat simulation
+const chatContainer = document.getElementById('chatContainer');
+const userInput = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', e=>{ if(e.key==='Enter') sendMessage(); });
+
+function sendMessage(){
+  const text = userInput.value.trim();
+  if(!text) return;
+  addBubble(text,'user');
+  userInput.value = '';
+  setTimeout(()=> addBubble('MH Bot: '+text,'bot'),500);
+}
+
+function addBubble(text,type){
+  const bubble = document.createElement('div');
+  bubble.className='chat-bubble '+type;
+  bubble.textContent=text;
+  chatContainer.appendChild(bubble);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+// Subscribe
+function subscribe(){
+  const email = document.getElementById('subscribeEmail').value.trim();
+  if(email) alert('Subscribed successfully: '+email);
+  else alert('Enter a valid email!');
+}
+
+// Initialize
+showCategory('Phones');
+</script>
+</body>
+  </html>
